@@ -1,6 +1,7 @@
 import numpy as np
 import tkinter as tk
 from PIL import ImageTk, Image
+import random
 import time
 
 PhotoImage = ImageTk.PhotoImage
@@ -33,11 +34,24 @@ class EnvRender(tk.Tk):
         self.counter = 0
         self.objects = []
 
+        """
+        CHANGED OBSTACLE ORIENTATION
+        """
         # obstacle
-        self.set_reward([0, 1], -1)
-        self.set_reward([1, 2], -1)
-        self.set_reward([2, 3], -1)
-        # #goal
+
+        # self.set_reward([0, 1], -1)
+        # self.set_reward([1, 2], -1)
+        # self.set_reward([2, 3], -1)
+
+        # diagonal obstacle orientation
+        result = WIDTH // 2
+        obs_x = result
+        obs_y = result
+        self.set_reward([obs_x, obs_y], -1)
+        self.set_reward([obs_x - 1, obs_y - 1], -1)
+        self.set_reward([obs_x + 1, obs_y + 1], -1)
+
+        #goal
         global goal_x
         global goal_y
         goal_x = gx
@@ -84,11 +98,30 @@ class EnvRender(tk.Tk):
             self.canvas.delete(obj['id'])
 
         self.objects = []
+        occupied_coords = [[1, 1]]
+
+        """
+        CHANGED OBSTACLE ORIENTATION
+        """
         # obstacle
-        self.set_reward([0, 1], -1)
-        self.set_reward([1, 2], -1)
-        self.set_reward([2, 3], -1)
-        # #goal
+        # self.set_reward([0, 1], -1)
+        # self.set_reward([1, 2], -1)
+        # self.set_reward([2, 3], -1)
+
+        # diagonal obstacle orientation
+        result = WIDTH // 2
+        obs_x = result
+        obs_y = result
+        self.set_reward([obs_x, obs_y], -1)
+        self.set_reward([obs_x - 1, obs_y - 1], -1)
+        self.set_reward([obs_x + 1, obs_y + 1], -1)
+
+        while True:
+            if [goal_x, goal_y] not in occupied_coords:
+                occupied_coords.append([goal_x, goal_y])
+                break
+
+        #goal
 
         self.set_reward([goal_x, goal_y], 1)
 

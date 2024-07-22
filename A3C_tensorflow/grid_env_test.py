@@ -8,7 +8,7 @@ import environment_a3c_load_weights
 from environment_a3c_load_weights import Env
 from renderenv_load_weights import EnvRender
 
-total_episodes = 0
+total_episodes = 1
 
 def copy_src_to_dst(from_scope, to_scope):
     from_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, from_scope)

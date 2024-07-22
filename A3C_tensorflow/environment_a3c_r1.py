@@ -34,33 +34,61 @@ class Env(object):
         # rectangle
         self.rectangle = (UNIT/2, UNIT/2)
 
+        """
+        CHANGING OBSTACLE ORIENTATION
+        """
         # obstacle
-        self.set_reward([0, 1], -1)
-        self.set_reward([1, 2], -1)
-        self.set_reward([2, 3], -1)
-        
+        # self.set_reward([0, 1], -1)
+        # self.set_reward([1, 2], -1)
+        # self.set_reward([2, 3], -1)
+
+        # diagonal obstacle orientation
+        result = WIDTH // 2
+        obs_x = result
+        obs_y = result
+        self.set_reward([obs_x, obs_y], -1)
+        self.set_reward([obs_x - 1, obs_y - 1], -1)
+        self.set_reward([obs_x + 1, obs_y + 1], -1)
+
         # #goal
         global goal_x
         global goal_y
         goal_x = random.randint(0, WIDTH-1)
         goal_y = random.randint(4, HEIGHT-1)
 
-        #self.set_reward([goal_x, goal_y], 1)
         self.set_reward([goal_x, goal_y], 1)
 
     def reset_reward(self):
 
         self.rewards = []
         self.goal = []
-        self.set_reward([0, 1], -1)
-        self.set_reward([1, 2], -1)
-        self.set_reward([2, 3], -1)
+        occupied_coords = [[1, 1]]
 
         HEIGHT = random.choice(grid_size)
         WIDTH = HEIGHT
 
+        """
+        CHANGING OBSTACLE ORIENTATION
+        """
+        # self.set_reward([0, 1], -1)
+        # self.set_reward([1, 2], -1)
+        # self.set_reward([2, 3], -1)
+
+        # diagonal obstacle orientation
+        result = WIDTH // 2
+        obs_x = result
+        obs_y = result
+        self.set_reward([obs_x, obs_y], -1)
+        self.set_reward([obs_x - 1, obs_y - 1], -1)
+        self.set_reward([obs_x + 1, obs_y + 1], -1)
+
         goal_x = random.randint(0, WIDTH-1)
         goal_y = random.randint(4, HEIGHT-1)
+        
+        while True:
+            if [goal_x, goal_y] not in occupied_coords:
+                occupied_coords.append([goal_x, goal_y])
+                break
         self.set_reward([goal_x, goal_y], 1)
 
 
