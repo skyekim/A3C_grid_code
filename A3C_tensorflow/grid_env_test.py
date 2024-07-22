@@ -257,7 +257,7 @@ def main():
     
           
     if coord.wait_for_stop() :
-        print 'stopped'
+        print('stopped')
         
     
 

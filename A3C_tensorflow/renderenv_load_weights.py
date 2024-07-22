@@ -1,5 +1,5 @@
 import numpy as np
-import Tkinter as tk
+import tkinter as tk
 from PIL import ImageTk, Image
 import time
 
@@ -93,51 +93,50 @@ class EnvRender(tk.Tk):
         self.set_reward([goal_x, goal_y], 1)
 
     def set_reward(self, state, reward):
-    	state = [int(state[0]), int(state[1])]
-    	x = int(state[0])
-    	y = int(state[1])
+        state = [int(state[0]), int(state[1])]
+        x = int(state[0])
+        y = int(state[1])
 
-    	tmp = {}
-    	if reward > 0:
-    		tmp['id'] = self.canvas.create_image((UNIT * x) + UNIT / 2, (UNIT * y) + UNIT / 2, image=self.shapes[2])
-    	elif reward < 0:
-    		tmp['id'] = self.canvas.create_image((UNIT * x) + UNIT / 2, (UNIT * y) + UNIT / 2, image=self.shapes[1])
+        tmp = {}
+        if reward > 0:
+            tmp['id'] = self.canvas.create_image((UNIT * x) + UNIT / 2, (UNIT * y) + UNIT / 2, image=self.shapes[2])
+        elif reward < 0:
+            tmp['id'] = self.canvas.create_image((UNIT * x) + UNIT / 2, (UNIT * y) + UNIT / 2, image=self.shapes[1])
 
-    	tmp['reward'] = reward
-    	self.objects.append(tmp)
+        tmp['reward'] = reward
+        self.objects.append(tmp)
 
     def reset(self, oenv):
-    	self.update()
-    	time.sleep(0.5)
+        self.update()
+        time.sleep(0.5)
 
-    	self.canvas.delete(self.rectangle)
-    	self.rectangle = self.canvas.create_image(oenv.rectangle[0], oenv.rectangle[1], image=self.shapes[0])
-    	self.reset_object()
+        self.canvas.delete(self.rectangle)
+        self.rectangle = self.canvas.create_image(oenv.rectangle[0], oenv.rectangle[1], image=self.shapes[0])
+        self.reset_object()
 
     def move(self, next_coords, mod_rewards):
-   		self.render()
-   		self.counter += 1
+        self.render()
+        self.counter += 1
 
-   		if self.counter % 2 == 1:
-   			for obj in self.objects:
-   				if obj['reward'] < 0:
-   					self.canvas.delete(obj['id'])
-   			
-   			self.objects = [item for item in self.objects if item['reward'] > 0]
+        if self.counter % 2 == 1:
+            for obj in self.objects:
+                if obj['reward'] < 0:
+                    self.canvas.delete(obj['id'])
+            
+            self.objects = [item for item in self.objects if item['reward'] > 0]
 
-	   		for item in mod_rewards:
-	   			if item['reward'] < 0:
-	   				tmp = {}
-	   				tmp['id'] = self.canvas.create_image(item['figure'][0], item['figure'][1], image=self.shapes[1])
-	   				tmp['reward'] = item['reward']
-	   				self.objects.append(tmp)
+            for item in mod_rewards:
+                if item['reward'] < 0:
+                    tmp = {}
+                    tmp['id'] = self.canvas.create_image(item['figure'][0], item['figure'][1], image=self.shapes[1])
+                    tmp['reward'] = item['reward']
+                    self.objects.append(tmp)
 
-   		self.canvas.delete(self.rectangle)
-   		self.rectangle = self.canvas.create_image(next_coords[0], next_coords[1], image=self.shapes[0])
-   		self.canvas.tag_raise(self.rectangle)
+        self.canvas.delete(self.rectangle)
+        self.rectangle = self.canvas.create_image(next_coords[0], next_coords[1], image=self.shapes[0])
+        self.canvas.tag_raise(self.rectangle)
 
 
     def render(self):
-    	time.sleep(0.07)
-    	self.update()
-
+        time.sleep(0.07)
+        self.update()

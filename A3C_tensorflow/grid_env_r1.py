@@ -250,10 +250,10 @@ def main():
     
           
     if coord.wait_for_stop() :
-        print 'stopped'
+        print('stopped')
         saver = tf.train.Saver()
         saver.save(sess, 'models/modelr1.ckpt')
-        print 'model saved' 
+        print('model saved') 
     
 
 if __name__ == '__main__':
