@@ -34,12 +34,24 @@ class Env():
         # rectangle
         self.rectangle = (UNIT/2, UNIT/2)
 
+        """
+        CHANGED OBSTACLE ORIENTATION
+        """
         # obstacle
-        self.set_reward([0, 1], -1)
-        self.set_reward([1, 2], -1)
-        self.set_reward([2, 3], -1)
-        
-        # #goal
+
+        # self.set_reward([0, 1], -1)
+        # self.set_reward([1, 2], -1)
+        # self.set_reward([2, 3], -1)
+
+        # diagonal obstacle orientation
+        result = WIDTH // 2
+        obs_x = result
+        obs_y = result
+        self.set_reward([obs_x, obs_y], -1)
+        self.set_reward([obs_x - 1, obs_y - 1], -1)
+        self.set_reward([obs_x + 1, obs_y + 1], -1)
+
+        #goal
         global goal_x
         global goal_y
         goal_x = random.randint(0, WIDTH-1)
@@ -51,9 +63,27 @@ class Env():
 
         self.rewards = []
         self.goal = []
-        self.set_reward([0, 1], -1)
-        self.set_reward([1, 2], -1)
-        self.set_reward([2, 3], -1)
+        occupied_coords = [[1, 1]]
+
+        """
+        CHANGED OBSTACLE ORIENTATION
+        """
+        # self.set_reward([0, 1], -1)
+        # self.set_reward([1, 2], -1)
+        # self.set_reward([2, 3], -1)
+
+        # diagonal obstacle orientation
+        result = WIDTH // 2
+        obs_x = result
+        obs_y = result
+        self.set_reward([obs_x, obs_y], -1)
+        self.set_reward([obs_x - 1, obs_y - 1], -1)
+        self.set_reward([obs_x + 1, obs_y + 1], -1)
+        
+        while True:
+            if [goal_x, goal_y] not in occupied_coords:
+                occupied_coords.append([goal_x, goal_y])
+                break
 
         self.set_reward([goal_x, goal_y], 1)
 
@@ -158,31 +188,44 @@ class Env():
         return new_rewards
 
     def move_const(self, target):
-
+        """
+        CHANGED OBSTACLES TO NOT MOVE
+        """
         s = target['figure']
         base_action = np.array([0, 0])
 
-        if s[0] == (WIDTH - 1) * UNIT + UNIT / 2:
-            target['direction'] = 1
-        elif s[0] == UNIT / 2:
-            target['direction'] = -1
-
-        if target['direction'] == -1:
-            base_action[0] += UNIT
-        elif target['direction'] == 1:
-            base_action[0] -= UNIT
-
-        if((target['figure'][0] != self.rectangle[0] or target['figure'][1] != self.rectangle[1]) 
-           and  s == [(WIDTH - 1) * UNIT, (HEIGHT - 1) * UNIT]):
-            base_action = np.array([0, 0])
-
-        tmp_x = target['figure'][0] + base_action[0]
-        tmp_y = target['figure'][1] + base_action[1]
+        tmp_x = target['figure'][0]
+        tmp_y = target['figure'][1]
         target['figure'] = (tmp_x, tmp_y)
 
         s_ = target['figure']
-
+    
         return s_
+
+        # s = target['figure']
+        # base_action = np.array([0, 0])
+
+        # if s[0] == (WIDTH - 1) * UNIT + UNIT / 2:
+        #     target['direction'] = 1
+        # elif s[0] == UNIT / 2:
+        #     target['direction'] = -1
+
+        # if target['direction'] == -1:
+        #     base_action[0] += UNIT
+        # elif target['direction'] == 1:
+        #     base_action[0] -= UNIT
+
+        # if((target['figure'][0] != self.rectangle[0] or target['figure'][1] != self.rectangle[1]) 
+        #    and  s == [(WIDTH - 1) * UNIT, (HEIGHT - 1) * UNIT]):
+        #     base_action = np.array([0, 0])
+
+        # tmp_x = target['figure'][0] + base_action[0]
+        # tmp_y = target['figure'][1] + base_action[1]
+        # target['figure'] = (tmp_x, tmp_y)
+
+        # s_ = target['figure']
+
+        # return s_
 
     def move(self, target, action):
         s = target
