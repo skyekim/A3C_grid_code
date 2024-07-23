@@ -42,15 +42,31 @@ class Env(object):
         # self.set_reward([1, 2], -1)
         # self.set_reward([2, 3], -1)
 
-        # diagonal obstacle orientation
         result = WIDTH // 2
         obs_x = result
         obs_y = result
+
+        # diagonal obstacle orientation
+        # self.set_reward([obs_x, obs_y], -1)
+        # self.set_reward([obs_x - 1, obs_y - 1], -1)
+        # self.set_reward([obs_x + 1, obs_y + 1], -1)
+
+        # triangle obstacle orientation
         self.set_reward([obs_x, obs_y], -1)
         self.set_reward([obs_x - 1, obs_y - 1], -1)
-        self.set_reward([obs_x + 1, obs_y + 1], -1)
+        self.set_reward([obs_x + 1, obs_y - 1], -1)
 
-        # #goal
+        # horizontal obstacle orientation
+        # self.set_reward([obs_x, obs_y], -1)
+        # self.set_reward([obs_x - 1, obs_y], -1)
+        # self.set_reward([obs_x + 1, obs_y], -1)
+
+        # vertical obstacle orientation
+        # self.set_reward([obs_x, obs_y], -1)
+        # self.set_reward([obs_x, obs_y - 1], -1)
+        # self.set_reward([obs_x, obs_y + 1], -1)
+
+        # goal
         global goal_x
         global goal_y
         goal_x = random.randint(0, WIDTH-1)
@@ -74,13 +90,19 @@ class Env(object):
         # self.set_reward([1, 2], -1)
         # self.set_reward([2, 3], -1)
 
-        # diagonal obstacle orientation
         result = WIDTH // 2
         obs_x = result
         obs_y = result
+
+        # diagonal obstacle orientation
+        # self.set_reward([obs_x, obs_y], -1)
+        # self.set_reward([obs_x - 1, obs_y - 1], -1)
+        # self.set_reward([obs_x + 1, obs_y + 1], -1)
+
+        # triangle obstacle orientation
         self.set_reward([obs_x, obs_y], -1)
         self.set_reward([obs_x - 1, obs_y - 1], -1)
-        self.set_reward([obs_x + 1, obs_y + 1], -1)
+        self.set_reward([obs_x + 1, obs_y - 1], -1)
 
         goal_x = random.randint(0, WIDTH-1)
         goal_y = random.randint(4, HEIGHT-1)
@@ -97,6 +119,15 @@ class Env(object):
         x = int(state[0])
         y = int(state[1])
         temp = {}
+
+        """
+        ADDED TO AVOID OBSTACLE AND GOAL BEING IN THE SAME LOCATION 
+        """
+        for reward_dict in self.rewards:
+            if reward_dict.get('reward') == -1 and reward_dict.get('state') == state and reward == 1:
+                x = random.randint(0, WIDTH-1)
+                y = random.randint(4, HEIGHT-1)
+                state = [x,y]
 
         if reward > 0:
             temp['reward'] = reward

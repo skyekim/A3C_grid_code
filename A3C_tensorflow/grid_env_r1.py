@@ -114,7 +114,7 @@ class Agent(threading.Thread):
     def play_episode(self):
         self.sess.run(self.global_to_local)
         global total_episodes
-        if total_episodes == 20000 :
+        if total_episodes == 50000 :
             self.coord.request_stop()
         states = []
         actions = []
