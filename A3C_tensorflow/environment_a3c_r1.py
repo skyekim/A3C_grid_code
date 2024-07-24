@@ -104,6 +104,11 @@ class Env(object):
         self.set_reward([obs_x - 1, obs_y - 1], -1)
         self.set_reward([obs_x + 1, obs_y - 1], -1)
 
+        # horizontal obstacle orientation
+        # self.set_reward([obs_x, obs_y], -1)
+        # self.set_reward([obs_x - 1, obs_y], -1)
+        # self.set_reward([obs_x + 1, obs_y], -1)
+
         goal_x = random.randint(0, WIDTH-1)
         goal_y = random.randint(4, HEIGHT-1)
         

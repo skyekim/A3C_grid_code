@@ -138,6 +138,11 @@ class EnvRender(tk.Tk):
         self.set_reward([obs_x - 1, obs_y - 1], -1)
         self.set_reward([obs_x + 1, obs_y - 1], -1)
 
+        # horizontal obstacle orientation
+        # self.set_reward([obs_x, obs_y], -1)
+        # self.set_reward([obs_x - 1, obs_y], -1)
+        # self.set_reward([obs_x + 1, obs_y], -1)
+
         while True:
             if [goal_x, goal_y] not in occupied_coords:
                 occupied_coords.append([goal_x, goal_y])
