@@ -17,7 +17,8 @@ obs_list = []
 y_list = []
 
 # possible grid sizes
-grid_size = [8, 10, 12, 14, 16]
+# grid_size = [8, 10, 12, 14, 16]
+grid_size = [8]
 
 #np.random.seed(1)
 
@@ -44,18 +45,32 @@ class Env():
         global poss 
         global y_list
 
-        obs_list = random.sample(xrange(1, HEIGHT), 5)
+        """
+        OBSTACLES ARE PLACED RANDOMLY
+        """
+        # obs_list = random.sample(range(1, HEIGHT), 5)
+        # y_list = [i for i in range(HEIGHT)]
+
+        # obs_list.sort()
+
+        # self.set_reward([1, obs_list[0]], -1)
+        # self.set_reward([WIDTH-1, obs_list[1]], -1)
+        # self.set_reward([2, obs_list[2]], -1)
+        # self.set_reward([WIDTH-2, obs_list[3]], -1)
+        # self.set_reward([3, obs_list[4]], -1)
+
+        """
+        OBSTACLES ARE NOT RANDOMLY PLACED
+        # """
+        obs_list = [2, 3, 4, 5, 6]
         y_list = [i for i in range(HEIGHT)]
-
-        obs_list.sort()
-
-        self.set_reward([0, obs_list[0]], -1)
+        self.set_reward([1, obs_list[0]], -1)
         self.set_reward([WIDTH-1, obs_list[1]], -1)
-        self.set_reward([1, obs_list[2]], -1)
+        self.set_reward([2, obs_list[2]], -1)
         self.set_reward([WIDTH-2, obs_list[3]], -1)
-        self.set_reward([2, obs_list[4]], -1)
+        self.set_reward([3, obs_list[4]], -1)
         
-        # #goal
+        # goal
         global goal_x
         global goal_y
 
@@ -71,12 +86,24 @@ class Env():
         self.rewards = []
         self.goal = []
         
-        self.set_reward([0, obs_list[0]], -1)
-        self.set_reward([WIDTH-1, obs_list[1]], -1)
-        self.set_reward([1, obs_list[2]], -1)
-        self.set_reward([WIDTH-2, obs_list[3]], -1)
-        self.set_reward([2, obs_list[4]], -1)
+        """
+        OBSTACLES ARE PLACED RANDOMLY
+        """
+        # self.set_reward([1, obs_list[0]], -1)
+        # self.set_reward([WIDTH-1, obs_list[1]], -1)
+        # self.set_reward([2, obs_list[2]], -1)
+        # self.set_reward([WIDTH-2, obs_list[3]], -1)
+        # self.set_reward([3, obs_list[4]], -1)
 
+        """
+        OBSTACLES ARE NOT RANDOMLY PLACED
+        """
+        self.set_reward([1, obs_list[0]], -1)
+        self.set_reward([WIDTH-1, obs_list[1]], -1)
+        self.set_reward([2, obs_list[2]], -1)
+        self.set_reward([WIDTH-2, obs_list[3]], -1)
+        self.set_reward([3, obs_list[4]], -1)
+        
         self.set_reward([goal_x, goal_y], 1)
 
     def set_reward(self, state, reward):
@@ -180,32 +207,48 @@ class Env():
         return new_rewards
 
     def move_const(self, target):
+        """
+        CHANGED OBSTACLES TO NOT MOVE
+        """
         s = target['figure']
         base_action = np.array([0, 0])
 
-        if s[0] == (WIDTH - 1) * UNIT + UNIT / 2:
-            target['direction'] = 1
-        elif s[0] == UNIT / 2:
-            target['direction'] = -1
-
-        if target['direction'] == -1:
-            base_action[0] += UNIT
-        elif target['direction'] == 1:
-            base_action[0] -= UNIT
-
-
-        if((target['figure'][0] != self.rectangle[0] or target['figure'][1] != self.rectangle[1]) 
-           and  s == [(WIDTH - 1) * UNIT, (HEIGHT - 1) * UNIT]):
-            base_action = np.array([0, 0])
-
-        tmp_x = target['figure'][0] + base_action[0]
-        tmp_y = target['figure'][1] + base_action[1]
-
+        tmp_x = target['figure'][0]
+        tmp_y = target['figure'][1]
         target['figure'] = (tmp_x, tmp_y)
+
         s_ = target['figure']
-
+    
         return s_
+    
+        """
+        DYNAMIC OBSTACLES
+        """
+        # s = target['figure']
+        # base_action = np.array([0, 0])
 
+        # if s[0] == (WIDTH - 1) * UNIT + UNIT / 2:
+        #     target['direction'] = 1
+        # elif s[0] == UNIT / 2:
+        #     target['direction'] = -1
+
+        # if target['direction'] == -1:
+        #     base_action[0] += UNIT
+        # elif target['direction'] == 1:
+        #     base_action[0] -= UNIT
+
+
+        # if((target['figure'][0] != self.rectangle[0] or target['figure'][1] != self.rectangle[1]) 
+        #    and  s == [(WIDTH - 1) * UNIT, (HEIGHT - 1) * UNIT]):
+        #     base_action = np.array([0, 0])
+
+        # tmp_x = target['figure'][0] + base_action[0]
+        # tmp_y = target['figure'][1] + base_action[1]
+
+        # target['figure'] = (tmp_x, tmp_y)
+        # s_ = target['figure']
+
+        # return s_
     def move(self, target, action):
         s = target
         base_action = np.array([0, 0])

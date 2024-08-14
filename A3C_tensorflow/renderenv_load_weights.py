@@ -34,11 +34,10 @@ class EnvRender(tk.Tk):
         self.counter = 0
         self.objects = []
 
-        """
-        CHANGED OBSTACLE ORIENTATION
-        """
         # obstacle
-
+        """
+        ORIGINAL OBSTACLE ORIENTATION
+        """
         # self.set_reward([0, 1], -1)
         # self.set_reward([1, 2], -1)
         # self.set_reward([2, 3], -1)
@@ -47,15 +46,18 @@ class EnvRender(tk.Tk):
         obs_x = result
         obs_y = result
 
+        """
+        CHANGED OBSTACLE ORIENTATION
+        """
         # diagonal obstacle orientation
         # self.set_reward([obs_x, obs_y], -1)
         # self.set_reward([obs_x - 1, obs_y - 1], -1)
         # self.set_reward([obs_x + 1, obs_y + 1], -1)
 
         # triangle obstacle orientation
-        self.set_reward([obs_x, obs_y], -1)
-        self.set_reward([obs_x - 1, obs_y - 1], -1)
-        self.set_reward([obs_x + 1, obs_y - 1], -1)
+        # self.set_reward([obs_x, obs_y], -1)
+        # self.set_reward([obs_x - 1, obs_y - 1], -1)
+        # self.set_reward([obs_x + 1, obs_y - 1], -1)
 
         # horizontal obstacle orientation
         # self.set_reward([obs_x, obs_y], -1)
@@ -63,9 +65,9 @@ class EnvRender(tk.Tk):
         # self.set_reward([obs_x + 1, obs_y], -1)
 
         # vertical obstacle orientation
-        # self.set_reward([obs_x, obs_y], -1)
-        # self.set_reward([obs_x, obs_y - 1], -1)
-        # self.set_reward([obs_x, obs_y + 1], -1)
+        self.set_reward([obs_x, obs_y], -1)
+        self.set_reward([obs_x, obs_y - 1], -1)
+        self.set_reward([obs_x, obs_y + 1], -1)
 
         # goal
         global goal_x
@@ -116,10 +118,10 @@ class EnvRender(tk.Tk):
         self.objects = []
         occupied_coords = [[1, 1]]
 
-        """
-        CHANGED OBSTACLE ORIENTATION
-        """
         # obstacle
+        """
+        ORIGINAL OBSTACLE ORIENTATION
+        """
         # self.set_reward([0, 1], -1)
         # self.set_reward([1, 2], -1)
         # self.set_reward([2, 3], -1)
@@ -128,20 +130,28 @@ class EnvRender(tk.Tk):
         obs_x = result
         obs_y = result
 
+        """
+        CHANGED OBSTACLE ORIENTATION
+        """
         # diagonal obstacle orientation
         # self.set_reward([obs_x, obs_y], -1)
         # self.set_reward([obs_x - 1, obs_y - 1], -1)
         # self.set_reward([obs_x + 1, obs_y + 1], -1)
 
         # triangle obstacle orientation
-        self.set_reward([obs_x, obs_y], -1)
-        self.set_reward([obs_x - 1, obs_y - 1], -1)
-        self.set_reward([obs_x + 1, obs_y - 1], -1)
+        # self.set_reward([obs_x, obs_y], -1)
+        # self.set_reward([obs_x - 1, obs_y - 1], -1)
+        # self.set_reward([obs_x + 1, obs_y - 1], -1)
 
         # horizontal obstacle orientation
         # self.set_reward([obs_x, obs_y], -1)
         # self.set_reward([obs_x - 1, obs_y], -1)
         # self.set_reward([obs_x + 1, obs_y], -1)
+
+        # vertical obstacle orientation
+        self.set_reward([obs_x, obs_y], -1)
+        self.set_reward([obs_x, obs_y - 1], -1)
+        self.set_reward([obs_x, obs_y + 1], -1)
 
         while True:
             if [goal_x, goal_y] not in occupied_coords:
@@ -158,14 +168,16 @@ class EnvRender(tk.Tk):
         y = int(state[1])
         tmp = {}
 
-        # """
-        # ADDED TO AVOID OBSTACLE AND GOAL BEING IN THE SAME LOCATION 
-        # """
-        # for reward_dict in self.objects:
-        #     if reward_dict.get('reward') == -1 and reward_dict.get('state') == state and reward == 1:
-        #         x = random.randint(0, WIDTH-1)
-        #         y = random.randint(4, HEIGHT-1)
-        #         state = [x,y]
+        """
+        ADDED TO AVOID OBSTACLE AND GOAL BEING IN THE SAME LOCATION 
+        """
+        if reward < 0:
+            occupied_positions = {tuple(obj['state']) for obj in self.objects}
+
+            while tuple(state) in occupied_positions:
+                x = random.randint(0, WIDTH - 1)
+                y = random.randint(4, HEIGHT - 1)
+                state = [x, y]
 
         if reward > 0:
             tmp['id'] = self.canvas.create_image((UNIT * x) + UNIT / 2, (UNIT * y) + UNIT / 2, image=self.shapes[2])

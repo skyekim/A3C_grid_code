@@ -34,10 +34,10 @@ class Env(object):
         # rectangle
         self.rectangle = (UNIT/2, UNIT/2)
 
-        """
-        CHANGING OBSTACLE ORIENTATION
-        """
         # obstacle
+        """
+        ORIGINAL OBSTACLE ORIENTATION
+        """
         # self.set_reward([0, 1], -1)
         # self.set_reward([1, 2], -1)
         # self.set_reward([2, 3], -1)
@@ -46,15 +46,18 @@ class Env(object):
         obs_x = result
         obs_y = result
 
+        """
+        CHANGING OBSTACLE ORIENTATION
+        """
         # diagonal obstacle orientation
         # self.set_reward([obs_x, obs_y], -1)
         # self.set_reward([obs_x - 1, obs_y - 1], -1)
         # self.set_reward([obs_x + 1, obs_y + 1], -1)
 
         # triangle obstacle orientation
-        self.set_reward([obs_x, obs_y], -1)
-        self.set_reward([obs_x - 1, obs_y - 1], -1)
-        self.set_reward([obs_x + 1, obs_y - 1], -1)
+        # self.set_reward([obs_x, obs_y], -1)
+        # self.set_reward([obs_x - 1, obs_y - 1], -1)
+        # self.set_reward([obs_x + 1, obs_y - 1], -1)
 
         # horizontal obstacle orientation
         # self.set_reward([obs_x, obs_y], -1)
@@ -62,9 +65,9 @@ class Env(object):
         # self.set_reward([obs_x + 1, obs_y], -1)
 
         # vertical obstacle orientation
-        # self.set_reward([obs_x, obs_y], -1)
-        # self.set_reward([obs_x, obs_y - 1], -1)
-        # self.set_reward([obs_x, obs_y + 1], -1)
+        self.set_reward([obs_x, obs_y], -1)
+        self.set_reward([obs_x, obs_y - 1], -1)
+        self.set_reward([obs_x, obs_y + 1], -1)
 
         # goal
         global goal_x
@@ -84,7 +87,7 @@ class Env(object):
         WIDTH = HEIGHT
 
         """
-        CHANGING OBSTACLE ORIENTATION
+        ORIGINAL OBSTACLE ORIENTATION
         """
         # self.set_reward([0, 1], -1)
         # self.set_reward([1, 2], -1)
@@ -94,20 +97,28 @@ class Env(object):
         obs_x = result
         obs_y = result
 
+        """
+        CHANGING OBSTACLE ORIENTATION
+        """
         # diagonal obstacle orientation
         # self.set_reward([obs_x, obs_y], -1)
         # self.set_reward([obs_x - 1, obs_y - 1], -1)
         # self.set_reward([obs_x + 1, obs_y + 1], -1)
 
         # triangle obstacle orientation
-        self.set_reward([obs_x, obs_y], -1)
-        self.set_reward([obs_x - 1, obs_y - 1], -1)
-        self.set_reward([obs_x + 1, obs_y - 1], -1)
+        # self.set_reward([obs_x, obs_y], -1)
+        # self.set_reward([obs_x - 1, obs_y - 1], -1)
+        # self.set_reward([obs_x + 1, obs_y - 1], -1)
 
         # horizontal obstacle orientation
         # self.set_reward([obs_x, obs_y], -1)
         # self.set_reward([obs_x - 1, obs_y], -1)
         # self.set_reward([obs_x + 1, obs_y], -1)
+
+        # vertical obstacle orientation
+        self.set_reward([obs_x, obs_y], -1)
+        self.set_reward([obs_x, obs_y - 1], -1)
+        self.set_reward([obs_x, obs_y + 1], -1)
 
         goal_x = random.randint(0, WIDTH-1)
         goal_y = random.randint(4, HEIGHT-1)
@@ -128,11 +139,13 @@ class Env(object):
         """
         ADDED TO AVOID OBSTACLE AND GOAL BEING IN THE SAME LOCATION 
         """
-        for reward_dict in self.rewards:
-            if reward_dict.get('reward') == -1 and reward_dict.get('state') == state and reward == 1:
-                x = random.randint(0, WIDTH-1)
-                y = random.randint(4, HEIGHT-1)
-                state = [x,y]
+        if reward < 0:
+            occupied_positions = {tuple(obj['state']) for obj in self.rewards}
+
+            while tuple(state) in occupied_positions:
+                x = random.randint(0, WIDTH - 1)
+                y = random.randint(4, HEIGHT - 1)
+                state = [x, y]
 
         if reward > 0:
             temp['reward'] = reward
@@ -225,29 +238,47 @@ class Env(object):
         return new_rewards
 
     def move_const(self, target):
+        """
+        CHANGED OBSTACLES TO NOT MOVE
+        """
         s = target['figure']
         base_action = np.array([0, 0])
 
-        if s[0] == (WIDTH - 1) * UNIT + UNIT / 2:
-            target['direction'] = 1
-        elif s[0] == UNIT / 2:
-            target['direction'] = -1
-
-        if target['direction'] == -1:
-            base_action[0] += UNIT
-        elif target['direction'] == 1:
-            base_action[0] -= UNIT
-
-        if((target['figure'][0] != self.rectangle[0] or target['figure'][1] != self.rectangle[1]) 
-           and  s == [(WIDTH - 1) * UNIT, (HEIGHT - 1) * UNIT]):
-            base_action = np.array([0, 0])
-
-        tmp_x = target['figure'][0] + base_action[0]
-        tmp_y = target['figure'][1] + base_action[1]
+        tmp_x = target['figure'][0]
+        tmp_y = target['figure'][1]
         target['figure'] = (tmp_x, tmp_y)
-        s_ = target['figure']
 
+        s_ = target['figure']
+    
         return s_
+    
+        """
+        DYNAMIC OBSTACLES
+        """
+        # s = target['figure']
+        # base_action = np.array([0, 0])
+
+        # if s[0] == (WIDTH - 1) * UNIT + UNIT / 2:
+        #     target['direction'] = 1
+        # elif s[0] == UNIT / 2:
+        #     target['direction'] = -1
+
+        # if target['direction'] == -1:
+        #     base_action[0] += UNIT
+        # elif target['direction'] == 1:
+        #     base_action[0] -= UNIT
+
+        # if((target['figure'][0] != self.rectangle[0] or target['figure'][1] != self.rectangle[1]) 
+        #    and  s == [(WIDTH - 1) * UNIT, (HEIGHT - 1) * UNIT]):
+        #     base_action = np.array([0, 0])
+
+        # tmp_x = target['figure'][0] + base_action[0]
+        # tmp_y = target['figure'][1] + base_action[1]
+        # target['figure'] = (tmp_x, tmp_y)
+
+        # s_ = target['figure']
+
+        # return s_
 
     def move(self, target, action):
         s = target

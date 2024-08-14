@@ -114,12 +114,12 @@ class Agent(threading.Thread):
 
     def play_episode(self):
         self.sess.run(self.global_to_local)
-        if total_episodes == 15000 :
+        global total_episodes
+        if total_episodes == 200000 :
             self.coord.request_stop()
         states = []
         actions = []
         rewards = []
-        global total_episodes
         s = self.env.reset()
 
         done = False
@@ -257,10 +257,10 @@ def main():
     
           
     if coord.wait_for_stop() :
-        print 'stopped'
+        print('stopped')
         saver = tf.train.Saver()
         saver.save(sess, 'models/modelmr1.ckpt')
-        print 'model saved' 
+        print('model saved')
     
 
 if __name__ == '__main__':
